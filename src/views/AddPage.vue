@@ -90,7 +90,6 @@
             v-model="form.date"
             type="date"
             placeholder="Tug'ilgan sana"
-            format="dd/MM/yyyy"
             class="w-full"
             clearable
           >
@@ -123,6 +122,7 @@ export default {
     return {
       labelPosition: "top",
       form: {
+        id: null,
         firstname: "",
         lastname: "",
         familyname: "",
@@ -201,6 +201,7 @@ export default {
   },
   methods: {
     onSubmit(form) {
+      this.form.id = localStorage.list ? JSON.parse(localStorage.list).length + 1 : 1;
       this.$refs[form].validate((valid) => {
         if (valid) {
           let arr = localStorage.list ? JSON.parse(localStorage.list) : [];
