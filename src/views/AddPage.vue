@@ -81,7 +81,7 @@
           ></el-input>
         </el-form-item>
         <el-form-item
-          label="Tug'ilgan kun/oy/yil"
+          label="Tug'ilgan yil-oy-kun"
           class="w-1/3 px-2"
           size="medium"
           prop="date"
@@ -89,11 +89,13 @@
           <el-date-picker
             v-model="form.date"
             type="date"
+            value-format="dd-MM-yyyy"
             placeholder="Tug'ilgan sana"
             class="w-full"
             clearable
           >
           </el-date-picker>
+          {{ form.date }}
         </el-form-item>
         <el-form-item
           label="Jinsi"
@@ -176,7 +178,6 @@ export default {
         ],
         date: [
           {
-            type: "date",
             required: true,
             message: "Tug'ilgan sanangizni kiriting!",
             trigger: "change",

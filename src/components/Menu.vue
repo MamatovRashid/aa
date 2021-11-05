@@ -2,7 +2,7 @@
   <div class="menu  w-60">
       <div class="absolute h-full bg-white w-60 pt-6 pl-6">
           <router-link to="/" class="text-3xl uppercase font-bold flex mb-5">Logo</router-link>
-          <router-link to="/" class="text-lg font-medium flex links mb-2 items-center active">
+          <router-link to="/" class="text-lg font-medium flex links mb-2 items-center">
             <span class="w-9 h-9 flex items-center justify-center mr-2 rounded-full">
                 <i class="fas fa-home"></i>
             </span>
@@ -29,6 +29,15 @@ export default {
     name: "Menu",
     mounted() {
         let links = document.querySelectorAll(".links");
+        if(this.$route.name === "Home"){
+            links[0].classList.add("active")
+        }
+        else if(this.$route.name === "Employees"){
+            links[1].classList.add("active")
+        }
+        else{
+            links[2].classList.add("active")
+        }
         for(let i = 0; i < links.length; i++){
             links[i].addEventListener("click", function() {
                 links[i].classList.add("active")

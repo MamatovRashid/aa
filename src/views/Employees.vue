@@ -91,6 +91,4 @@ export default {
 </script>
 
 <style>
-.employees {
-}
 </style>
