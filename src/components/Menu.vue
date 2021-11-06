@@ -12,7 +12,7 @@
             <span class="w-9 h-9 flex items-center justify-center mr-2 rounded-full">
                 <i class="fas fa-user-friends"></i>
             </span>
-            List
+            List employee
           </router-link>
           <router-link to="/addpage" class="text-lg font-medium flex links mb-2 items-center">
             <span class="w-9 h-9 flex items-center justify-center mr-2 rounded-full">
@@ -35,7 +35,7 @@ export default {
         else if(this.$route.name === "Employees"){
             links[1].classList.add("active")
         }
-        else{
+        else if(this.$route.name === "AddPage"){
             links[2].classList.add("active")
         }
         for(let i = 0; i < links.length; i++){

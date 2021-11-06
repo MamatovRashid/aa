@@ -10,7 +10,7 @@
         class="text-lg"
       >
         <el-table-column width="22"> </el-table-column>
-        <el-table-column width="50" prop="id"> </el-table-column>
+        <el-table-column type="index" width="50"> </el-table-column>
         <el-table-column prop="lastname" label="Familiyasi" sortable>
         </el-table-column>
         <el-table-column prop="firstname" label="Ismi" sortable>
@@ -31,7 +31,7 @@
         <el-table-column
           prop="gender"
           label="Jins"
-          width="100"
+          width="80"
           :filters="[
             { text: 'Erkak', value: 'Erkak' },
             { text: 'Ayol', value: 'Ayol' },
@@ -45,6 +45,19 @@
               disable-transitions
               >{{ scope.row.gender }}</el-tag
             >
+          </template>
+        </el-table-column>
+        <el-table-column label="Operations" width="200">
+          <template slot-scope="scope">
+            <el-button size="mini" @click="handleEdit(scope.$index)"
+              ><i class="far fa-eye"></i> Open</el-button
+            >
+            <el-popconfirm title="Ushbu ma'lumotno o'chirmoqchimisiz?" confirm-button-text='Ha'
+  cancel-button-text="Yo'q" @confirm="handleDelete(scope.$index)">
+              <el-button 
+              size="mini"
+              type="danger" slot="reference" @="aa"><i class="far fa-trash-alt"></i> Delete</el-button>
+            </el-popconfirm>
           </template>
         </el-table-column>
       </el-table>
@@ -65,16 +78,14 @@ export default {
   name: "Employees",
   data() {
     return {
+      list: [],
       total: 0,
       pagesize: 10,
       currentPage: 1,
     };
   },
-  computed: {
-    list() {
-      let arr = localStorage.list ? JSON.parse(localStorage.list) : [];
-      return arr;
-    },
+  mounted() {
+    this.employeeList();
   },
   methods: {
     filterDep(value, row) {
@@ -86,9 +97,20 @@ export default {
     current_change: function (currentPage) {
       this.currentPage = currentPage;
     },
+    handleEdit(index) {
+      this.$router.push(`/editpage?index=${index}`);
+    },
+    handleDelete(index) {
+      let arr = JSON.parse(localStorage.list);
+      arr.splice(index, 1);
+      localStorage.list = JSON.stringify(arr);
+      this.list = JSON.parse(localStorage.list);
+    },
+    employeeList() {
+      this.list = JSON.parse(localStorage.list);
+    },
   },
 };
 </script>
 
-<style>
-</style>
+<style></style>

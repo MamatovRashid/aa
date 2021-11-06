@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import Employees from '../views/Employees.vue'
 import AddPage from '../views/AddPage.vue'
+import EditPage from '../views/EditPage.vue'
 
 Vue.use(VueRouter)
 
@@ -29,6 +30,11 @@ const routes = [
     path: '/addpage',
     name: 'AddPage',
     component: AddPage
+  },
+  {
+    path: '/editpage',
+    name: 'EditPage',
+    component: EditPage
   },
 ]
 

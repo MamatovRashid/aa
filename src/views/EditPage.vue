@@ -1,7 +1,7 @@
 <template>
-  <div class="addpage px-7">
+  <div class="editpage px-7">
     <div class="rounded-3xl bg-white p-8">
-      <h1 class="font-bold text-xl">Ma'lumot qo'shish</h1>
+      <h1 class="font-bold text-xl">Xodim ma'lumoti</h1>
       <el-form
         ref="form"
         class="mt-4 -mx-2 flex flex-wrap"
@@ -11,7 +11,7 @@
         label-width="120px"
       >
         <el-form-item
-          label="Ismingiz"
+          label="Ismi"
           prop="firstname"
           class="w-1/3 px-2"
           size="medium"
@@ -20,10 +20,11 @@
             v-model="form.firstname"
             placeholder="Ismingiz"
             clearable
+            :disabled="disabled"
           ></el-input>
         </el-form-item>
         <el-form-item
-          label="Familiyangiz"
+          label="Familiyasi"
           prop="lastname"
           class="w-1/3 px-2"
           size="medium"
@@ -32,10 +33,11 @@
             v-model="form.lastname"
             placeholder="Familiyangiz"
             clearable
+            :disabled="disabled"
           ></el-input>
         </el-form-item>
         <el-form-item
-          label="Otangizning ismi"
+          label="Otasining ismi"
           prop="familyname"
           class="w-1/3 px-2"
           size="medium"
@@ -44,10 +46,11 @@
             v-model="form.familyname"
             placeholder="Otangizning ismi"
             clearable
+            :disabled="disabled"
           ></el-input>
         </el-form-item>
         <el-form-item
-          label="Bo'limlar"
+          label="Bo'lim"
           prop="department"
           size="medium"
           class="w-1/3 px-2"
@@ -58,6 +61,7 @@
             placeholder="Bo'limlar"
             class="w-full"
             clearable
+            :disabled="disabled"
           >
             <el-option
               v-for="dep in department"
@@ -78,10 +82,11 @@
             v-model="form.position"
             placeholder="Lavozimi"
             clearable
+            :disabled="disabled"
           ></el-input>
         </el-form-item>
         <el-form-item
-          label="Tug'ilgan kun-oy-yil"
+          label="Tug'ilgan sanasi"
           class="w-1/3 px-2"
           size="medium"
           prop="date"
@@ -94,6 +99,7 @@
             placeholder="Tug'ilgan sana"
             class="w-full"
             clearable
+            :disabled="disabled"
           >
           </el-date-picker>
         </el-form-item>
@@ -104,13 +110,15 @@
           size="medium"
         >
           <el-radio-group v-model="form.gender">
-            <el-radio label="Erkak"></el-radio>
-            <el-radio label="Ayol"></el-radio>
+            <el-radio label="Erkak" :disabled="disabled"></el-radio>
+            <el-radio label="Ayol" :disabled="disabled"></el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item label=" " class="flex-1 px-2 text-right" size="medium">
-          <el-button type="primary" @click="onSubmit('form')">Qo'shish</el-button>
-          <el-button  @click="resetForm('form')">Tozalash</el-button>
+          <el-button type="primary" @click="onSubmit('form')"
+            >Saqlash</el-button
+          >
+          <el-button @click="disabled = false">O'zgartirish</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -122,8 +130,10 @@ export default {
   name: "AddPage",
   data() {
     return {
+      disabled: true,
       labelPosition: "top",
       form: {
+        id: null,
         firstname: "",
         lastname: "",
         familyname: "",
@@ -199,20 +209,34 @@ export default {
       ],
     };
   },
+  mounted() {
+    this.edit();
+  },
   methods: {
     onSubmit(form) {
       this.$refs[form].validate((valid) => {
-        if (valid) {
-          let arr = localStorage.list ? JSON.parse(localStorage.list) : [];
-          arr.push(this.form);
-          localStorage.list = JSON.stringify(arr);
+        if (valid && !this.disabled) {
+          let list = JSON.parse(localStorage.list);
+          let index = parseInt(this.$route.query.index);
+          for (let i = 0; i < list.length; i++) {
+            if (index === i) {
+              list[i] = this.form;
+            }
+          }
+          localStorage.list = JSON.stringify(list);
 
           this.$notify({
             title: "Muaffaqiyatli",
-            message: "Ma'lumot saqlandi",
+            message: "Ma'lumot o'zgartirildi",
             type: "success",
           });
-          // this.$router.push('/employees')
+          this.$router.push('/employees')
+        } else if (this.disabled) {
+          this.$notify({
+            title: "Ogohlantirish",
+            message: "Siz ma'lumotni o'zgartirmadingiz",
+            type: "warning",
+          });
         } else {
           this.$notify.error({
             title: "Xato",
@@ -222,15 +246,24 @@ export default {
         }
       });
     },
-    resetForm(form) {
-        this.$refs[form].resetFields();
+
+    edit() {
+      if (this.$route.query.index) {
+        let list = JSON.parse(localStorage.list);
+        let index = parseInt(this.$route.query.index);
+        for (let i = 0; i < list.length; i++) {
+          if (index === i) {
+            this.form = list[i];
+          }
+        }
       }
+    },
   },
 };
 </script>
 
 <style lang="scss">
-.addpage {
+.editpage {
   .el-form-item__label {
     line-height: 1.2 !important;
     padding-bottom: 5px !important;
@@ -246,6 +279,9 @@ export default {
 
   .el-date-editor {
     width: 100% !important;
+  }
+  .el-input.is-disabled .el-input__inner{
+      color: rgb(19, 18, 18);
   }
 }
 </style>
